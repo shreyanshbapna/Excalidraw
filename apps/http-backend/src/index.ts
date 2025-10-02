@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import { JWT_SECRET } from "@repo/common-backend/config"
 import { middleware } from "./middleware";
 import { createUserSchema, signinSchema , createRoomSchema} from "@repo/common/test"
-import { prismaClient } from "@repo/db/client"
+import  prismaClient  from "@repo/db/client"
 
 const app = express();
 app.use(express.json());
