@@ -35,6 +35,9 @@ importers:
       express:
         specifier: ^5.1.0
         version: 5.1.0
+      http-backend:
+        specifier: 'link:'
+        version: 'link:'
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
