@@ -1,5 +1,3 @@
-import axios from "axios";
-import { BACKEND_URL } from "@repo/secret/config";
 import ChatRoomClient from "../../../component/ChatRoomClient";
 import { getMessages, getRoomId } from "../../lib/api";
 
