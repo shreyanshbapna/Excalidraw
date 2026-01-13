@@ -11,3 +11,5 @@ export const getMessages = async (roomId: number): Promise<string[]> => {
   // Extract only the message strings from objects
   return response.data.messages.map((m: { message: string }) => m.message);
 };
+
+

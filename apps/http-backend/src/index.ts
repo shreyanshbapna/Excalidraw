@@ -149,7 +149,7 @@ app.post("/create-room", middleware, async (req: Request, res: Response) => {
   }
 });
 
-app.get("/chats/:roomId", async (req: Request, res: Response) => {
+app.get("/shapes/:roomId", async (req: Request, res: Response) => {
   const roomId = Number(req.params.roomId);
 
   if (isNaN(roomId)) {
