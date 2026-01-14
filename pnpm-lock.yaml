@@ -20,9 +20,12 @@ importers:
 
   apps/excalidraw-web:
     dependencies:
-      '@repo/secret':
-        specifier: workspace:*
-        version: link:../../packages/secret
+      '@custom-react-hooks/use-window-size':
+        specifier: ^1.5.1
+        version: 1.5.1(react@19.2.3)
+      '@uidotdev/usehooks':
+        specifier: ^2.4.1
+        version: 2.4.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -45,6 +48,9 @@ importers:
         specifier: ^7.70.0
         version: 7.70.0(react@19.2.3)
     devDependencies:
+      '@repo/secret':
+        specifier: workspace:*
+        version: link:../../packages/secret
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.1.18
@@ -417,6 +423,11 @@ packages:
 
   '@chevrotain/utils@10.5.0':
     resolution: {integrity: sha512-hBzuU5+JjB2cqNZyszkDHZgOSrUUT8V3dhgRl8Q9Gp6dAj/H5+KILGjbhDpc3Iy9qmqlm/akuOI2ut9VUtzJxQ==}
+
+  '@custom-react-hooks/use-window-size@1.5.1':
+    resolution: {integrity: sha512-7SA+ivPqeeakTUKoQDUtv2o0uriFxLZR6YZ36TagF7AShe5El6HnqLh3+9F5HiVEJpmrUjUOsdFt2MI8Y1ZeKw==}
+    peerDependencies:
+      react: '>=16'
 
   '@electric-sql/pglite-socket@0.0.6':
     resolution: {integrity: sha512-6RjmgzphIHIBA4NrMGJsjNWK4pu+bCWJlEWlwcxFTVY3WT86dFpKwbZaGWZV6C5Rd7sCk1Z0CI76QEfukLAUXw==}
@@ -1270,6 +1281,13 @@ packages:
   '@typescript-eslint/visitor-keys@8.52.0':
     resolution: {integrity: sha512-ink3/Zofus34nmBsPjow63FP5M7IGff0RKAgqR6+CFpdk22M7aLwC9gOcLGYqr7MczLPzZVERW9hRog3O4n1sQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@uidotdev/usehooks@2.4.1':
+    resolution: {integrity: sha512-1I+RwWyS+kdv3Mv0Vmc+p0dPYH0DTRAo04HLyXReYBL9AeseDWUJyi4THuksBJcu9F0Pih69Ak150VDnqbVnXg==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
 
   '@unrs/resolver-binding-android-arm-eabi@1.11.1':
     resolution: {integrity: sha512-ppLRUgHVaGRWUx0R0Ut06Mjo9gBaBkg3v/8AxusGLhsIotbBLuRk51rAzqLC8gq6NyyAojEXglNjzf6R948DNw==}
@@ -3438,6 +3456,10 @@ snapshots:
 
   '@chevrotain/utils@10.5.0': {}
 
+  '@custom-react-hooks/use-window-size@1.5.1(react@19.2.3)':
+    dependencies:
+      react: 19.2.3
+
   '@electric-sql/pglite-socket@0.0.6(@electric-sql/pglite@0.3.2)':
     dependencies:
       '@electric-sql/pglite': 0.3.2
@@ -4265,6 +4287,11 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.52.0
       eslint-visitor-keys: 4.2.1
+
+  '@uidotdev/usehooks@2.4.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+    dependencies:
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
 
   '@unrs/resolver-binding-android-arm-eabi@1.11.1':
     optional: true

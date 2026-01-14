@@ -1,33 +1,49 @@
-"use client"
-import { useEffect, useRef } from "react";
+"use client";
+import { useWindowSize } from "@uidotdev/usehooks";
+import { useEffect, useRef, useState } from "react";
 import initDraw from "../draw";
-import { RectangleHorizontal } from "lucide-react";
-
-export function Canvas({ roomId, socket }: { roomId: number, socket: WebSocket}) {
+import { Circle, Minus, RectangleHorizontal } from "lucide-react";
+export function Canvas({
+  roomId,
+  socket,
+}: {
+  roomId: number;
+  socket: WebSocket;
+}) {
+  const { width, height } = useWindowSize();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [type, setType] = useState("");
 
   useEffect(() => {
-    
     if (canvasRef.current) {
       const canvas = canvasRef.current;
-      initDraw(canvas, roomId, socket);
+      const cleanup = initDraw(canvas, roomId, socket, type);
+
+      return () => {
+        cleanup?.then((fn) => fn?.());
+      };
     }
-  }, [canvasRef]);
+  }, [canvasRef, type]);
 
   return (
-    <div>
+    <div className="h-screen overflow-hidden">
       <canvas
         ref={canvasRef}
-        width={4000}
-        height={2000}
+        width={width ?? undefined}
+        height={height ?? undefined}
         className="border border-black bg-black"
       ></canvas>
 
-      <div className="absolute top-0 left-0 ml-2">
-        <button className="bg-amber-50 text-black">
-          <RectangleHorizontal className="bg-black size-10 text-white" />
+      <div className="absolute top-0 left-10 ">
+        <button className=" mr-5" onClick={() => setType("rect")}>
+          <RectangleHorizontal className={`border-2 border-white rounded-full p-1 cursor-pointer bg-black size-10 hover:bg-gray-600 text-${type==="rect"? "red-500": "white"}`} />
         </button>
-        <button className="bg-amber-50 text-black p-3 m-2"> circle</button>
+        <button className="mr-5" onClick={() => setType("circle")}>
+          <Circle className={`border-2 border-white rounded-full p-1 cursor-pointer bg-black size-10 hover:bg-gray-600 text-${type==="circle"? "red-500": "white"}`}/>
+        </button>
+        <button className="mr-5" onClick={() => setType("line")}>
+          <Minus className={`border-2 border-white rounded-full p-1 cursor-pointer bg-black size-10 hover:bg-gray-600 text-${type==="line"? "red-500": "white"}`}/>
+        </button>
       </div>
     </div>
   );

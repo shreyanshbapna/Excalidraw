@@ -15,13 +15,7 @@ export default function ChatRoomClient({
   const { loading, socket } = useSocket();
 
   useEffect(() => {
-    if (socket && !loading) {
-      socket.send(
-        JSON.stringify({
-          roomId,
-          type: "join_room",
-        })
-      );
+    if (socket && !loading) { 
 
       socket.onmessage = (event) => {
         const parsedData = JSON.parse(event.data);
