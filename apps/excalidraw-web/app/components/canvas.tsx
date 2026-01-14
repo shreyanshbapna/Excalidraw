@@ -3,6 +3,7 @@ import { useWindowSize } from "@uidotdev/usehooks";
 import { useEffect, useRef, useState } from "react";
 import initDraw from "../draw";
 import { Circle, Minus, RectangleHorizontal } from "lucide-react";
+import { Game } from "../draw/game";
 export function Canvas({
   roomId,
   socket,
@@ -12,18 +13,19 @@ export function Canvas({
 }) {
   const { width, height } = useWindowSize();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [type, setType] = useState("");
+  const [game, setGame] = useState<Game>();
 
   useEffect(() => {
     if (canvasRef.current) {
       const canvas = canvasRef.current;
-      const cleanup = initDraw(canvas, roomId, socket, type);
+      const g = new Game(canvas, roomId, socket);
+      setGame(g);
 
       return () => {
-        cleanup?.then((fn) => fn?.());
+        g.destroy();
       };
     }
-  }, [canvasRef, type]);
+  }, [canvasRef]);
 
   return (
     <div className="h-screen overflow-hidden">
@@ -35,14 +37,29 @@ export function Canvas({
       ></canvas>
 
       <div className="absolute top-0 left-10 ">
-        <button className=" mr-5" onClick={() => setType("rect")}>
-          <RectangleHorizontal className={`border-2 border-white rounded-full p-1 cursor-pointer bg-black size-10 hover:bg-gray-600 text-${type==="rect"? "red-500": "white"}`} />
+        <button className=" mr-5" onClick={() => game?.setType("rect")}>
+          <RectangleHorizontal
+            className={
+              "border-2 border-white rounded-full p-1 cursor-pointer size-10 hover:bg-gray-600 " +
+              (game?.type === "rect" ? "text-red-500" : "text-white")
+            }
+          />
         </button>
-        <button className="mr-5" onClick={() => setType("circle")}>
-          <Circle className={`border-2 border-white rounded-full p-1 cursor-pointer bg-black size-10 hover:bg-gray-600 text-${type==="circle"? "red-500": "white"}`}/>
+        <button className="mr-5" onClick={() => game?.setType("circle")}>
+          <Circle
+            className={
+              "border-2 border-white rounded-full p-1 cursor-pointer size-10 hover:bg-gray-600 " +
+              (game?.type === "circle" ? "text-red-500" : "text-white")
+            }
+          />
         </button>
-        <button className="mr-5" onClick={() => setType("line")}>
-          <Minus className={`border-2 border-white rounded-full p-1 cursor-pointer bg-black size-10 hover:bg-gray-600 text-${type==="line"? "red-500": "white"}`}/>
+        <button className="mr-5" onClick={() => game?.setType("line")}>
+          <Minus
+            className={
+              "border-2 border-white rounded-full p-1 cursor-pointer size-10 hover:bg-gray-600 " +
+              (game?.type === "line" ? "text-red-500" : "text-white")
+            }
+          />
         </button>
       </div>
     </div>
