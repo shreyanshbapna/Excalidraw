@@ -20,6 +20,11 @@ export type Shape =
       startY: number;
       endX: number;
       endY: number;
+    } | {
+      type: "text";
+      startX: number;
+      startY: number;
+      text: string
     };
 
 let existingShapes: Shape[] = [];
@@ -54,6 +59,10 @@ function clearCanvas(
       ctx.moveTo(shape.startX, shape.startY);
       ctx.lineTo(shape.endX, shape.endY);
       ctx.stroke();
+    } 
+    else if (shape.type === "text") {
+      ctx.font = "48px serif";
+      ctx.strokeText(shape.text, shape.startX, shape.startY);
     }
   });
 }
@@ -90,6 +99,8 @@ export default async function initDraw(
     InitialY = e.clientY;
   };
 
+
+  // mouse up handler 
   const handleMouseUp = (e: MouseEvent) => {
     clicked = false;
 
@@ -103,7 +114,9 @@ export default async function initDraw(
         x: InitialX,
         y: InitialY,
       };
-    } else if (type === "circle") {
+    } 
+    
+    else if (type === "circle") {
       const radius =
         Math.sqrt(
           Math.pow(e.clientX - InitialX, 2) + Math.pow(e.clientY - InitialY, 2)
@@ -115,7 +128,9 @@ export default async function initDraw(
         centerY: (e.clientY + InitialY) / 2,
         radius: radius,
       };
-    } else if (type === "line") {
+    } 
+    
+    else if (type === "line") {
       shape = {
         type: "line",
         startX: InitialX,
@@ -123,6 +138,15 @@ export default async function initDraw(
         endX: e.clientX,
         endY: e.clientY,
       };
+    } 
+    
+    else if(type === "text"){
+      shape = {
+        type: "text",
+        startX: InitialX,
+        startY: InitialY,
+        text: "hello"
+      }
     }
 
     if (shape) {
@@ -136,6 +160,7 @@ export default async function initDraw(
     }
   };
 
+  // mouse move
   const handleMouseMove = (e: MouseEvent) => {
     if (clicked) {
       clearCanvas(existingShapes, canvas, ctx);

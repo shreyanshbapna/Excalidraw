@@ -20,7 +20,7 @@
     "react-hook-form": "^7.70.0"
   },
   "devDependencies": {
-    "repo/common": "workspace:*",
+    "@repo/common": "workspace:*",
     "@repo/secret": "workspace:*",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",

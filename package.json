@@ -1,5 +1,5 @@
 {
-  "name": "Rebuild Excalidraw",
+  "name": "Excalidraw",
   "private": true,
   "scripts": {
     "build": "turbo run build",

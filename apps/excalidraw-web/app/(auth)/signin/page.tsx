@@ -2,7 +2,7 @@
 import { BACKEND_URL } from "@repo/secret/config";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 type Inputs = {
@@ -27,7 +27,7 @@ export default function App() {
     });
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
-      router.push("/create-room");
+      redirect("/create-app")
     } else {
       alert(response.data.message);
     }

@@ -1,26 +1,32 @@
-import { Shape } from ".";
+import { Shape } from "./index";
 import { getExistingShape } from "../lib/api";
 
-type shape = "rect" | "line" | "circle";
+type shape = "rect" | "line" | "circle" | "text";
 
 export class Game {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
+  private setInputBox: React.Dispatch<React.SetStateAction<boolean>>;
+  private setTypes: React.Dispatch<React.SetStateAction<string>>;
   private socket: WebSocket;
   private roomId: number;
   public type: shape;
   private clicked: boolean;
-  private InitialX: number;
-  private InitialY: number;
+  public  InitialX: number;
+  public InitialY: number;
   private existingShapes: Shape[];
+  private text: string;
 
-  constructor(canvas: HTMLCanvasElement, roomId: number, socket: WebSocket) {
+  constructor(canvas: HTMLCanvasElement, roomId: number, socket: WebSocket, setInputBox: React.Dispatch<React.SetStateAction<boolean>>, setTypes:  React.Dispatch<React.SetStateAction<string>>){
     this.canvas = canvas;
+    this.setInputBox = setInputBox;
+    this.setTypes = setTypes;
     this.ctx = canvas.getContext("2d")!;
     this.type = "rect";
     this.clicked = false;
     this.InitialX = 0;
     this.InitialY = 0;
+    this.text = "";
     this.roomId = roomId;
     this.socket = socket;
     this.existingShapes = [];
@@ -31,10 +37,31 @@ export class Game {
     this.initHandler();
   }
 
+  finalizeText() {
+    if (!this.text.trim()) return;
+  
+    const shape: Shape = {
+      type: "text",
+      startX: this.InitialX,
+      startY: this.InitialY,
+      text: this.text,
+    };
+  
+    this.socket.send(
+      JSON.stringify({
+        type: "chat",
+        roomId: this.roomId,
+        message: JSON.stringify(shape),
+      })
+    );
+  
+    this.text = "";
+    this.setInputBox(false);
+  }
+
   initHandler() {
     this.socket.onmessage = (event) => {
       const chats = JSON.parse(event.data);
-
       if (chats.type === "chat") {
         const shape = JSON.parse(chats.message);
         this.existingShapes.push(shape);
@@ -43,7 +70,12 @@ export class Game {
     };
   }
   setType(type: shape) {
+    this.setTypes(type);
     this.type = type;
+  }
+
+  setText(text: string) {
+    this.text = text;
   }
 
   clearCanvas() {
@@ -72,12 +104,19 @@ export class Game {
         );
         this.ctx.stroke();
       }
+
       // for line
       else if (shape.type === "line") {
         this.ctx.beginPath();
         this.ctx.moveTo(shape.startX, shape.startY);
         this.ctx.lineTo(shape.endX, shape.endY);
         this.ctx.stroke();
+      }
+      // for text
+      else if (shape.type === "text") {
+        this.ctx.font = "25px Arial";
+        this.ctx.fillStyle = "white";
+        this.ctx.fillText(shape.text, shape.startX, shape.startY);
       }
     });
   }
@@ -106,7 +145,8 @@ export class Game {
         x: this.InitialX,
         y: this.InitialY,
       };
-    } else if (this.type === "circle") {
+    } 
+    else if (this.type === "circle") {
       const radius =
         Math.sqrt(
           Math.pow(e.clientX - this.InitialX, 2) +
@@ -119,7 +159,8 @@ export class Game {
         centerY: (e.clientY + this.InitialY) / 2,
         radius: radius,
       };
-    } else if (this.type === "line") {
+    } 
+    else if (this.type === "line") {
       shape = {
         type: this.type,
         startX: this.InitialX,
@@ -127,6 +168,10 @@ export class Game {
         endX: e.clientX,
         endY: e.clientY,
       };
+    } 
+    else if (this.type === "text") {
+      this.setInputBox(true);
+      return;
     }
 
     if (shape) {
@@ -143,6 +188,7 @@ export class Game {
   handleMouseMove = (e: MouseEvent) => {
     if (this.clicked) {
       this.clearCanvas();
+
       // set stroke(bountry of shape to white color)
       this.ctx.strokeStyle = "rgba(255, 255, 255)";
 
